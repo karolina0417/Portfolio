@@ -19,4 +19,4 @@ I look forward to hearing from you soon.
       * [Temat]()
    * PowerBI
       * [Raport dotyczący hoteli](https://github.com/karolinapopiolek/Portfolio/blob/382da70962fc05fb555772657300d25b41e74025/Raport%20dot.%20hoteli.pbix)
-      * [Raport dotyczący 
+      * [Raport dotyczący przykładowej firmy](https://github.com/karolinapopiolek/Portfolio/blob/e5f17c5c9699a6c707c3fa3d877d15350f3bc6f2/Raport%20dot.%20przyk%C5%82adowej%20firmy.pbix)
