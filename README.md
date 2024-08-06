@@ -9,11 +9,11 @@ Thank you for your time.
 I look forward to hearing from you soon.
 
 ## Contents
-* [About](README.md)
+* [About](https://github.com/karolinapopiolek/Portfolio/blob/2edca3aa3958138e8786eb5539943d801bd7f231/README.md)
   
-* [Portfolio Projects]()
+* [Portfolio Projects]
   
    * Excel
-      * [Prognozowanie gospodarcze w Excelu]()
+      * [Prognozowanie gospodarcze w Excelu](https://github.com/karolinapopiolek/Portfolio/blob/2edca3aa3958138e8786eb5539943d801bd7f231/Prognozowanie%20gospodarcze%20w%20Excelu.xlsx)
    * RStudio
       * [Temat]()
