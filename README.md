@@ -9,7 +9,7 @@ Thank you for your time.
 I look forward to hearing from you soon.
 
 ## Contents
-* [About]()
+* [About](README.md)
   
 * [Portfolio Projects]()
   
