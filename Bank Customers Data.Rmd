@@ -1,0 +1,197 @@
+---
+title: "Bank Customers"
+author: "Karolina Popiołek"
+date: "2024-08-08"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(maps)
+library(rnaturalearth)
+library(corrplot)
+```
+
+## 1. Dane
+
+## 1.1. Załączenie danych i wyświetlenie podglądu kilku pierwszych wierszy
+
+```{r customers}
+Churn.Modeling <- read.csv("C:/Users/Karolina/Documents/Churn Modeling.csv")
+attach(Churn.Modeling)
+length(Churn.Modeling$Surname)
+
+head(Churn.Modeling)
+
+```
+
+## 1.2. Sprawdzenie struktury danych
+
+Występuje łącznie 14 zmiennych (9 - integer, 3 - character, 2 - numeric).
+
+```{r}
+str(Churn.Modeling)
+```
+
+## 1.3. Konwertowanie zmiennych kategorycznych
+
+```{r}
+Churn.Modeling$Geography <- as.factor(Churn.Modeling$Geography)
+Churn.Modeling$Gender <- as.factor(Churn.Modeling$Gender)
+Churn.Modeling$HasCrCard <- as.factor(Churn.Modeling$HasCrCard)
+Churn.Modeling$IsActiveMember <- as.factor(Churn.Modeling$IsActiveMember)
+Churn.Modeling$Exited <- as.factor(Churn.Modeling$Exited)
+```
+
+## 2. Rozkład danych
+
+## 2.1. Rozkład danych ze względu na wiek
+
+```{r}
+ggplot(Churn.Modeling, aes(x = Age)) + 
+  geom_histogram(binwidth = 5, fill = "lightgreen", color = "black") +
+  theme_minimal() +
+  labs(title = "Rozkład wieku klientów", x = "Wiek", y = "Liczba klientów")
+```
+
+## 2.2. Rozkład danych ze względu na płeć
+
+```{r}
+#Liczba klientów wg płci
+gender_distribution <- table(Churn.Modeling$Gender)
+print(gender_distribution)
+
+#Wizualizacja
+ggplot(Churn.Modeling, aes(x = Gender, fill = Gender)) +
+  geom_bar(color = "black") +
+  scale_fill_manual(values = c("Female" = "pink", "Male" = "lightblue")) +
+  theme_minimal() +
+  labs(title = "Rozkład klientów według płci", x = "Płeć", y = "Liczba klientów")
+```
+
+## 2.3. Rozkład danych ze względu na kraj
+
+```{r}
+geography_Churn.Modeling <- Churn.Modeling %>%
+  group_by(Geography) %>%
+  summarise(Count = n())
+
+# Sprawdzam wyniki
+print(geography_Churn.Modeling)
+
+# Wczytuję mapę
+world_map <- map_data("world")
+
+# Dopasowanie nazw krajów z bazy do nazw na mapie
+geography_Churn.Modeling <- geography_Churn.Modeling %>%
+  mutate(Country = recode(Geography,
+                          "Spain" = "Spain",
+                          "Germany" = "Germany",
+                          "France" = "France"))
+
+# Połączenie danych z mapą
+map_Churn.Modeling <- left_join(world_map, geography_Churn.Modeling, by = c("region" = "Country"))
+
+# Wizualizacja
+ggplot(map_Churn.Modeling, aes(x = long, y = lat, group = group, fill = Count)) +
+  geom_polygon(color = "black") +
+  scale_fill_gradient(low = "yellow", high = "red", na.value = "grey") +
+  theme_minimal() +
+  labs(title = "Rozkład klientów według kraju", fill = "Liczba klientów") +
+  theme(axis.text = element_blank(),
+        axis.title = element_blank(),
+        panel.grid = element_blank())
+```
+
+## 2.4. Rozkład danych ze względu na Credit Score
+
+```{r}
+# Podstawowe statystyki dla punktacji kredytowej
+creditscore_summary <- summary(Churn.Modeling$CreditScore)
+print(creditscore_summary)
+
+# Histogram punktacji kredytowej
+ggplot(Churn.Modeling, aes(x = CreditScore)) +
+  geom_histogram(binwidth = 20, fill = "skyblue", color = "black") +
+  theme_minimal() +
+  labs(title = "Rozkład punktacji kredytowej", x = "Punktacja kredytowa", y = "Liczba klientów")
+```
+
+## 2.4.1. Czy Credit Score zależy od płci i kraju?
+
+Analizę przeprowadzono za pomocą Heatmapy. Im kolor jest ciemniejszy, tym wyższe wartości średniej punktacji kredytowej reprezentuje.
+
+```{r}
+heatmap_data <- Churn.Modeling %>%
+  group_by(Geography, Gender) %>%
+  summarise(Mean_CreditScore = mean(CreditScore, na.rm = TRUE))
+
+# Heatmapa punktacji kredytowej według kraju i płci
+ggplot(heatmap_data, aes(x = Geography, y = Gender, fill = Mean_CreditScore)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient(low = "lightyellow", high = "red") +
+  theme_minimal() +
+  labs(title = "Średnia punktacja kredytowa według kraju i płci", x = "Kraj", y = "Płeć", fill = "Średnia punktacja") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+Wnioski: Generalnie różnice w średnich punktacjach kredytowej są stosunkowo niewielkie. Może to oznaczać, że systemy oceniania kredytowego w analizowanych krajach są do siebie zbliżone.
+
+Najwyższą średnią punktację kredytową wyróżniają się kobiety w Niemczech, natomiast najniższą kobiety we Francji. W Hiszpani punktacje obu płci są do siebie bardzo podobne.
+
+## 3. Analiza korelacji
+
+```{r}
+# Korelacja między zmiennymi numerycznymi
+corr_matrix <- cor(Churn.Modeling %>% select(CreditScore, Age, Tenure, Balance, NumOfProducts, EstimatedSalary))
+corrplot(corr_matrix, method = "circle")
+
+# Korelacja ze zmienną "Exited"
+correlation <- cor(Churn.Modeling %>% select(-Exited) %>% select_if(is.numeric), as.numeric(as.character(Churn.Modeling$Exited)))
+print(correlation)
+```
+
+Wnioski:
+
+1)  Występuje słaba korelacja pomiędzy liczbą produktów a saldem konta. Zależność ta jest ujemna, a to oznacza, że gdy wzrasta liczba produktów, saldo konta maleje i odwrotnie.
+
+2)  Większość zmiennych ma bardzo słabą korelację ze zmienną "Exited", a zatem zmienne takie jak: punkt kredytowy, długość zatrudnienia, liczba produktów i oszacowane wynagrodzenie nie mają silnego wpływu na decyzję o opuszczeniu banku.
+
+3)  Starsi klienci mają nieco wyższą tendencję do opuszczania banku, na co wskazuje umiarkowana dodatnia korelacja.
+
+4)  Klienci posiadający wyższe saldo konta mogą mieć nieco wyższą tendencję do opuszczania banku, co sugeruje dodatnia, choć słaba korekacja.
+
+## 4. Klienci, którzy opuścili bank
+
+```{r}
+# Klienci, którzy odeszli, w zależności od państwa
+ggplot(Churn.Modeling, aes(x = Geography, fill = Exited)) + 
+  geom_bar(position = "fill") +
+  theme_minimal() +
+  labs(title = "Odsetek klientów, którzy odeszli, w zależności od państwa", x = "Państwo", y = "Procent")
+
+# Klienci, którzy odeszli, w zależności od płci
+ggplot(Churn.Modeling, aes(x = Gender, fill = Exited)) + 
+  geom_bar(position = "fill") +
+  theme_minimal() +
+  labs(title = "Odsetek klientów, którzy odeszli, w zależności od płci", x = "Płeć", y = "Procent")
+```
+
+Wniosek: Wśród klientów, którzy opuścili bank największy odsetek stanowili klienci z Niemiec. Biorąc pod uwagę płeć, wśród klientów opuszczających bank przeważały kobiety.
+
+## 5. Klienci posiadający kartę kredytową w zależności od państwa
+
+```{r}
+# Klienci, którzy odeszli, w zależności od państwa
+ggplot(Churn.Modeling, aes(x = Geography, fill = HasCrCard)) + 
+  geom_bar(position = "fill") +
+  theme_minimal() +
+  labs(title = "Odsetek klientów posiadających kartę kredytową, w zależności od państwa", x = "Państwo", y = "Procent")
+```
+
+Wniosek: Zdecydowana większość klientów (około 75% z nich) posiada kartę kredytową.
