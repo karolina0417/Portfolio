@@ -17,7 +17,8 @@ I look forward to hearing from you soon.
       * [Prognozowanie gospodarcze w Excelu](https://github.com/karolinapopiolek/Portfolio/blob/2edca3aa3958138e8786eb5539943d801bd7f231/Prognozowanie%20gospodarcze%20w%20Excelu.xlsx)
    
    * RStudio
-      * [Temat]()
+      * [Anova trójczynnikowa](https://rpubs.com/karolinapopiolek/989235)
+      * [Bank Customers]()
    
    * PowerBI
       * [Raport dotyczący hoteli](https://github.com/karolinapopiolek/Portfolio/blob/382da70962fc05fb555772657300d25b41e74025/Raport%20dot.%20hoteli.pbix)
