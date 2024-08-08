@@ -18,7 +18,7 @@ I look forward to hearing from you soon.
    
    * RStudio
       * [Anova trójczynnikowa](https://rpubs.com/karolinapopiolek/989235)
-      * [Bank Customers](https://github.com/karolinapopiolek/Portfolio/blob/0a94df6487f6f72780750ccae834d98163c835d4/Bank%20Customers%20Data.Rmd)
+      * [Bank Customers.Rmd](https://github.com/karolinapopiolek/Portfolio/blob/0a94df6487f6f72780750ccae834d98163c835d4/Bank%20Customers%20Data.Rmd) | [Bank Customers.pdf](https://github.com/karolinapopiolek/Portfolio/blob/be449ee86cd20f3e05fe3adc1b43fccb06bb0143/Bank%20Customers.pdf)
    
    * PowerBI
       * [Raport dotyczący hoteli](https://github.com/karolinapopiolek/Portfolio/blob/382da70962fc05fb555772657300d25b41e74025/Raport%20dot.%20hoteli.pbix)
