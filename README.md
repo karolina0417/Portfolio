@@ -18,6 +18,7 @@ Thank you for your time.
    * RStudio
       * [Anova trójczynnikowa](https://rpubs.com/karolinapopiolek/989235)
       * [Bank Customers.Rmd](https://github.com/karolinapopiolek/Portfolio/blob/0a94df6487f6f72780750ccae834d98163c835d4/Bank%20Customers%20Data.Rmd) | [Bank Customers.pdf](https://github.com/karolinapopiolek/Portfolio/blob/be449ee86cd20f3e05fe3adc1b43fccb06bb0143/Bank%20Customers.pdf)
+      * [Testy statystyczne](https://github.com/karolina0417/Portfolio/blob/f434e51832a35aaa12be9505eb32f04b8491f3d8/Testy_statystyczne.Rmd) | [Testy_statystyczne.pdf](https://github.com/karolina0417/Portfolio/blob/f434e51832a35aaa12be9505eb32f04b8491f3d8/Testy%20statystyczne.pdf)
    
    * PowerBI
       * [Raport dotyczący hoteli](https://github.com/karolinapopiolek/Portfolio/blob/382da70962fc05fb555772657300d25b41e74025/Raport%20dot.%20hoteli.pbix)
