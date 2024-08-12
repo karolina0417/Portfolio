@@ -1,0 +1,102 @@
+---
+title: "Testy statystyczne"
+author: "Karolina Popiołek"
+date: "2024-08-09"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(car)
+library(lmtest)
+library(nortest)
+library(tseries)
+```
+
+## 1. Dane
+
+W niniejszym raporcie będę pracować na zbiorze danych "mtcars", który obejmuje informacje odnośnie poszczególnych modeli samochodów. Próba składa się z 32 obserwacji. Poniżej znajduje się podgląd zbioru.
+
+```{r cars}
+data(mtcars)
+head(mtcars)
+```
+
+## 2. Badanie zależności zużycia paliwa (mpg) od masy samochodu (wt) i mocy silnika (hp)
+
+mpg = B0 + B1 * wt + B2 * hp + ϵ
+
+Założenia klasycznej regresji liniowej:
+
+1) Normalność rozkładu składnika losowego
+2) Liniowość
+3) Homoskedastyczność (stałość wariancji składnika losowego)
+4) Brak autokorelacji: Składnik losowy
+
+```{r}
+model <- lm(mpg ~ wt + hp, data = mtcars)
+summary(model)
+```
+
+Wnioski:
+
+1) Wzrost masy samochodu o jedną jednostkę prowadzi do spadku zużycia paliwa średnio o 3.88, przy założeniu stałości mocy silnika.
+
+2) Wzrost mocy silnika o jedną jednostkę prowadzi do spadku zużycia paliwa średnio o 0.032, przy założeniu stałości masy pojazdu.
+
+3) Obie zmienne mają znaczący wpływ na zmienną mpg, a zatem zmiana masy samochodu i zmiana mocy silnika są silnie związane z zużyciem paliwa.
+
+4) Wysoka wartość statystyki F i bardzo niskie p-value wskazują na to, że model jest istotny statystycznie.
+
+
+## 2. Testy statystyczne
+
+2.1. Testy normalności Shapiro-Wilka i Jarque-Bera
+
+Sprawdzam, czy próbka pochodzi z rozkładu normalnego. Przy obu testach stawiam następujące hipotezy:
+
+H0: Rozkład jest normalny
+H1: Rozkład nie jest normalny
+
+```{r}
+shapiro.test(residuals(model))
+jarque.bera.test(residuals(model))
+```
+Interpretacja Shapiro-Wilka:
+p-value < 0,05, a zatem na poziomie istotności 0,05 odrzucamy H0 i zakładamy, że model nie ma rozkładu normalnego.
+
+Interpretacja Jarque-Bera:
+p=value > 0,05, a zatem nie ma podstaw do odrzucania H0 i zakładamy, że nie występują istotne odchylenia od normalności.
+
+Rozbieżność wynika z faktu, iż test Shapiro-Wilka jest bardziej czuły niż test Jarque-Bera, zwłaszcza przy małych próbach. Decyduję się kontynuować analizę, mając na uwadze, że rozkład nie jest idealnie normalny.
+
+
+2.2. Test homoskedastyczności - Test Breuscha-Pagana
+
+W celu sprawdzenia homoskedastyczności stawiam następujące hipotezy:
+H0: Wariancja reszt jest stała
+H1: Wariancja reszt nie jest stała
+
+```{r}
+bptest(model)
+```
+Interpretacja:
+p-value > 0.05, a zatem nie ma podstaw do odrzucenia hipotezy zerowej o braku heteroskedastyczności (zakładamy, że wariancja jest stała).
+
+2.3. Test autokorelacji Durbina-Watsona
+
+Założenia:
+H0: Autokorekacja reszt nie występuje
+H1: Występuje autokorelacja reszt
+
+```{r}
+dwtest(model)
+```
+Interpretacja:
+Ponieważ statystyka D-W < 2 istnieje możliwość występowania dodatniej autokorelacji.
+Z uwagi na wartość p-value, która jest mniejsza niż poziom ufności 0,05, mamy podstawy do odrzucenia hipotezy zerowej i przyjęcia, że istnieje dodatnia autokorelacja, a więc reszty mogą być ze sobą skorelowane. W związku z tym nie zostało spełnione jedno z założeń regresji liniowej, więc model odrzucamy jako nieprawidłowy.
+
+
