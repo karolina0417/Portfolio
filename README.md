@@ -1,7 +1,7 @@
 # Data Analysis Portfolio
 My name is Karolina. I graduated with a bachelor’s degree in Economic Analytics with a specialization in Financial Analyst.
 
-I am proficient in the R programming language, which is an invaluable tool for statistical analysis. Additionally, I use Power BI software, which allows for the creation of interactive reports and dashboards, a key aspect of business decision-making. I have a strong command of the Microsoft Office suite, including Word, Excel, PowerPoint, Access etc. I am also independently learning SQL to further develop my skills in database management and data analysis.
+I use the R programming language, which is an invaluable tool for statistical analysis. Additionally, I use Power BI software, which allows for the creation of interactive reports and dashboards, a key aspect of business decision-making. I have a strong command of the Microsoft Office suite, including Word, Excel, PowerPoint, Access etc. I am also independently learning SQL to further develop my skills in database management and data analysis.
 
 In this portfolio, I have included several of my projects related to data analysis and visualization. You will find links of the dashboards and reports I have created using various tools such as Excel, Power BI and R Studio. 
 
